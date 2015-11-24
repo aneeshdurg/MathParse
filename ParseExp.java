@@ -14,7 +14,8 @@ class ParseExp
 			throw new ParseException("Unmatched brackets!");
 		exp = exp.replaceAll("\\s+", "").toLowerCase();
 		this.exp = exp;
-		parse();
+		if(!exp.contains("="))
+			parse();
 	}
 	private ParseExp(String exp, int counter) throws ParseException
 	{
@@ -33,122 +34,128 @@ class ParseExp
 		boolean decimal=false;
 		int decimalcount=0;
 		boolean neg=false;
-		while(exp.length()>0)
+		else
 		{
-			char now = exp.charAt(0);	
-			char next;
-			if (exp.length()>1) 
-				next = exp.charAt(1);
-			else
-				next = 0;
-			//normal number
-			if (now<=57&&now>=48)
+			while(exp.length()>0)
 			{
-				if (!decimal)
-				{
-					currentnum*=10;
-					currentnum+=now-48;
-				}
+				char now = exp.charAt(0);	
+				char next;
+				if (exp.length()>1) 
+					next = exp.charAt(1);
 				else
+					next = 0;
+				//normal number
+				if (now<=57&&now>=48)
 				{
-					currentnum+=(now-48)*Math.pow(10, 0-decimalcount);
-					decimalcount++;
+					if (!decimal)
+					{
+						currentnum*=10;
+						currentnum+=now-48;
+					}
+					else
+					{
+						currentnum+=(now-48)*Math.pow(10, 0-decimalcount);
+						decimalcount++;
+					}
+
+					exp = exp.substring(1, exp.length());
+
+					if (exp.length()==0)
+					{
+						if(neg)
+						{
+							currentnum=0-currentnum;
+						}
+						numbers.add(currentnum);
+					}
+					counter++;
 				}
-
-				exp = exp.substring(1, exp.length());
-
-				if (exp.length()==0)
+				//handles decimal numbers
+				else if(now=='.')
+				{
+					decimal=true;
+					decimalcount++;
+					exp = exp.substring(1, exp.length());
+				}
+				//handles pi
+				else if(now=='p')
+				{
+					counter++;
+					if(next!='i')
+						throw new ParseException("Error at "+counter+":"+length+"! Please check and ensure that the expression is properly formatted!");
+					if(next<=57&&next>=48)
+						throw new ParseException("Error at "+counter+":"+length+"! Please check and ensure that the expression is properly formatted!");
+					currentnum = Math.PI;
+					if (exp.equals("pi"))
+						numbers.add(currentnum);
+					exp = exp.substring(2, exp.length());
+					counter++;
+				}
+				//Expression inside ()
+				else if(now=='(')
+				{
+					//need to check for nested ) so that index of doesn't pick it up?
+					if (exp.lastIndexOf(")")<1)
+						throw new ParseException("Error at "+counter+":"+length+"! Please check and ensure that the expression is properly formatted!");
+					if (exp.indexOf("-)")==1)
+					{
+						neg=true;
+						counter+=3;
+						exp = exp.substring(exp.lastIndexOf(")")+1, exp.length());
+					}
+					else
+					{
+						int closing=1;
+						for(int i=1; i<exp.length(); i++)
+						{
+							if (exp.charAt(i)=='(') closing++;
+							else if (exp.charAt(i)==')') closing--;
+							if (closing==0) 
+							{
+								closing=i;
+								i=exp.length();
+							}
+						}
+						String subexp = exp.substring(exp.indexOf("(")+1, closing);
+						ParseExp brackets = new ParseExp(subexp, counter);
+						currentnum=brackets.evaluate();
+						counter+=subexp.length()+2;
+						exp = exp.substring(closing+1, exp.length());
+						if (exp.length()==0)
+							numbers.add(currentnum);
+					}
+				}
+				//adds operators
+				else if(ops.contains(now+""))
 				{
 					if(neg)
 					{
 						currentnum=0-currentnum;
+						neg=false;
 					}
+					operations.add(now);
 					numbers.add(currentnum);
+					exp = exp.substring(1, exp.length());
+					currentnum = 0;
+					counter++;	
 				}
-				counter++;
-			}
-			//handles decimal numbers
-			else if(now=='.')
-			{
-				decimal=true;
-				decimalcount++;
-				exp = exp.substring(1, exp.length());
-			}
-			//handles pi
-			else if(now=='p')
-			{
-				counter++;
-				if(next!='i')
+				//Illegal characters
+				if((next<48||next>57)&&!ops.contains(now+"")&&!ops.contains(next+"")&&next!='.'&&next!=0&&!(now=='p'&&next=='i'))
 					throw new ParseException("Error at "+counter+":"+length+"! Please check and ensure that the expression is properly formatted!");
-				if(next<=57&&next>=48)
-					throw new ParseException("Error at "+counter+":"+length+"! Please check and ensure that the expression is properly formatted!");
-				currentnum = Math.PI;
-				if (exp.equals("pi"))
-					numbers.add(currentnum);
-				exp = exp.substring(2, exp.length());
-				counter++;
 			}
-			//Expression inside ()
-			else if(now=='(')
+			//Illegal operators
+			if(numbers.size()!=operations.size()+1)
 			{
-				//need to check for nested ) so that index of doesn't pick it up?
-				if (exp.lastIndexOf(")")<1)
-					throw new ParseException("Error at "+counter+":"+length+"! Please check and ensure that the expression is properly formatted!");
-				if (exp.indexOf("-)")==1)
-				{
-					neg=true;
-					counter+=3;
-					exp = exp.substring(exp.lastIndexOf(")")+1, exp.length());
-				}
-				else
-				{
-					int closing=1;
-					for(int i=1; i<exp.length(); i++)
-					{
-						if (exp.charAt(i)=='(') closing++;
-						else if (exp.charAt(i)==')') closing--;
-						if (closing==0) 
-						{
-							closing=i;
-							i=exp.length();
-						}
-					}
-					String subexp = exp.substring(exp.indexOf("(")+1, closing);
-					ParseExp brackets = new ParseExp(subexp, counter);
-					currentnum=brackets.evaluate();
-					counter+=subexp.length()+2;
-					exp = exp.substring(closing+1, exp.length());
-					if (exp.length()==0)
-						numbers.add(currentnum);
-				}
+				throw new ParseException("Operations ("+operations.size()+") and arguments ("+numbers.size()+") do not match! Please check and ensure that the expression is properly formatted!");	
 			}
-			//adds operators
-			else if(ops.contains(now+""))
-			{
-				if(neg)
-				{
-					currentnum=0-currentnum;
-					neg=false;
-				}
-				operations.add(now);
-				numbers.add(currentnum);
-				exp = exp.substring(1, exp.length());
-				currentnum = 0;
-				counter++;	
-			}
-			//Illegal characters
-			if((next<48||next>57)&&!ops.contains(now+"")&&!ops.contains(next+"")&&next!='.'&&next!=0&&!(now=='p'&&next=='i'))
-				throw new ParseException("Error at "+counter+":"+length+"! Please check and ensure that the expression is properly formatted!");
-		}
-		//Illegal operators
-		if(numbers.size()!=operations.size()+1)
-		{
-			throw new ParseException("Operations ("+operations.size()+") and arguments ("+numbers.size()+") do not match! Please check and ensure that the expression is properly formatted!");	
 		}
 	}
 
 	public double evaluate() throws ParseException
 	{
+		if (exp.contains("="))
+			return equate()
+
 		LinkedList<Double> numbers = new LinkedList<Double>();
 		LinkedList<Character> operations = new LinkedList<Character>();
 		for(int i=0; i<this.numbers.size()-1; i++)
@@ -185,6 +192,23 @@ class ParseExp
 	public static double evaluate(String exp) throws ParseException
 	{
 		return new ParseExp(exp).evaluate();
+	}
+
+	public double equate() throws ParseException
+	{
+		String lhs = exp.substring(0, exp.indexOf("="));
+		String rhs = exp.substring(exp.indexOf("=")+1, 0);
+		lhs_eval = new ParseExp(lhs).evaluate();
+		rhs_eval = new ParseExp(rhs).evaluate();
+		return lhs_eval==rhs_eval?1:0;
+	}
+	public static double equate(String exp) throws ParseException
+	{
+		String lhs = exp.substring(0, exp.indexOf("="));
+		String rhs = exp.substring(exp.indexOf("=")+1, 0);
+		lhs_eval = new ParseExp(lhs).evaluate();
+		rhs_eval = new ParseExp(rhs).evaluate();
+		return lhs_eval==rhs_eval?1:0;
 	}
 
 	public double nextNum() throws ParseException

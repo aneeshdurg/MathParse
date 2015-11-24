@@ -3,11 +3,19 @@
 
 	double evaluate()
 		Parses the string which the ParseExp object was initiallized 
-		with.
+		with. If the string contains "=", calls equate.
 
 	double evaluate(String exp)
-		Parses the string passed to the function
+		Parses the string passed to the function. If the string contains "=", calls equate.
 
+	double equate()
+		Parses the equation with which the ParseExp object was initialized with.
+		Return 1 if true and 0 if false.	
+
+	double equate(String exp)
+		Parses the equation passed to the function.
+		Return 1 if true and 0 if false.
+			
 	double nextNum()
 		Returns the next number in the expression. Throws ParseException
 		if no number is found. Use hasNextNum to avoid this.
