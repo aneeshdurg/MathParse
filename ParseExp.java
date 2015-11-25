@@ -34,8 +34,7 @@ class ParseExp
 		boolean decimal=false;
 		int decimalcount=0;
 		boolean neg=false;
-		else
-		{
+
 			while(exp.length()>0)
 			{
 				char now = exp.charAt(0);	
@@ -80,6 +79,8 @@ class ParseExp
 				//handles pi
 				else if(now=='p')
 				{
+					decimal = false;
+					decimalcount = 0;
 					counter++;
 					if(next!='i')
 						throw new ParseException("Error at "+counter+":"+length+"! Please check and ensure that the expression is properly formatted!");
@@ -94,6 +95,8 @@ class ParseExp
 				//Expression inside ()
 				else if(now=='(')
 				{
+					decimal = false;
+					decimalcount = 0;
 					//need to check for nested ) so that index of doesn't pick it up?
 					if (exp.lastIndexOf(")")<1)
 						throw new ParseException("Error at "+counter+":"+length+"! Please check and ensure that the expression is properly formatted!");
@@ -128,6 +131,8 @@ class ParseExp
 				//adds operators
 				else if(ops.contains(now+""))
 				{
+					decimal = false;
+					decimalcount = 0;
 					if(neg)
 					{
 						currentnum=0-currentnum;
@@ -148,13 +153,13 @@ class ParseExp
 			{
 				throw new ParseException("Operations ("+operations.size()+") and arguments ("+numbers.size()+") do not match! Please check and ensure that the expression is properly formatted!");	
 			}
-		}
+		
 	}
 
 	public double evaluate() throws ParseException
 	{
 		if (exp.contains("="))
-			return equate()
+			return equate();
 
 		LinkedList<Double> numbers = new LinkedList<Double>();
 		LinkedList<Character> operations = new LinkedList<Character>();
@@ -197,17 +202,17 @@ class ParseExp
 	public double equate() throws ParseException
 	{
 		String lhs = exp.substring(0, exp.indexOf("="));
-		String rhs = exp.substring(exp.indexOf("=")+1, 0);
-		lhs_eval = new ParseExp(lhs).evaluate();
-		rhs_eval = new ParseExp(rhs).evaluate();
+		String rhs = exp.substring(exp.indexOf("=")+1, exp.length());
+		double lhs_eval = new ParseExp(lhs).evaluate();
+		double rhs_eval = new ParseExp(rhs).evaluate();
 		return lhs_eval==rhs_eval?1:0;
 	}
 	public static double equate(String exp) throws ParseException
 	{
 		String lhs = exp.substring(0, exp.indexOf("="));
 		String rhs = exp.substring(exp.indexOf("=")+1, 0);
-		lhs_eval = new ParseExp(lhs).evaluate();
-		rhs_eval = new ParseExp(rhs).evaluate();
+		double lhs_eval = new ParseExp(lhs).evaluate();
+		double rhs_eval = new ParseExp(rhs).evaluate();
 		return lhs_eval==rhs_eval?1:0;
 	}
 
@@ -264,12 +269,5 @@ class ParseExp
     		}	 
 		}
 		return counter;
-	}
-}
-class ParseException extends Exception
-{
-	public ParseException(String msg)
-	{
-		super(msg);
 	}
 }
