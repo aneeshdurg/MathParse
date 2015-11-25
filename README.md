@@ -1,6 +1,9 @@
 # ParseExp
 	A class used to parse a String into a mathematical expression.
 
+	ParseExp(String exp)
+		Initializes a ParseExp object with the string exp.
+
 	double evaluate()
 		Parses the string which the ParseExp object was initiallized 
 		with. If the string contains "=", calls equate.
@@ -34,3 +37,14 @@
 
 	String getExp()
 		Returns the original expression as a String.	
+
+# ParseFn
+	A class used to parse a String into a mathematical function.
+	Character in the range a..z are acceptable variable names.
+
+	ParseFn(String fn) throws ParseExption
+		Initializes a ParseFn object with the string fn
+
+	String defVar(char[] var, double[] values) throws ParseException
+		Assigns the vars to specified values.
+		returns "" if some vars aren't assigned yet
