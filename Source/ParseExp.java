@@ -1,5 +1,7 @@
+package MathParse;
+
 import java.util.LinkedList;
-class ParseExp
+public class ParseExp
 {
 	private String exp;
 	private String ops = "^*/+-";

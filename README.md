@@ -1,3 +1,10 @@
+#MathParse
+	To use, add the folder MathParse to your project directory and add the line:
+		> import MathParse.*;
+	to import all classes in MathParse
+
+	Classes contained in MathParse:	
+
 # ParseExp
 	A class used to parse a String into a mathematical expression.
 

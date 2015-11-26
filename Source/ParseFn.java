@@ -1,5 +1,7 @@
+package MathParse;
+
 import java.util.LinkedList;
-class ParseFn
+public class ParseFn
 {
 	public LinkedList<String> terms = new LinkedList<String>();
 	public LinkedList<String> defterms = new LinkedList<String>();
@@ -66,9 +68,9 @@ class ParseFn
 
 	public String defVar(char[] var, double[] value) throws ParseException
 	{
-		for (variable : var)
+		for (int i=0; i<var.length; i++)
 		{	
-			if (!vars.contains(variable+""))
+			if (!vars.contains(var[i]+""))
 				throw new ParseException("Illegal varaible names!");			
 		}
 		
@@ -120,7 +122,6 @@ class ParseFn
 			else
 				exp+=defterms.get(i);
 		}
-		System.out.println("exp: "+exp);
 		return ParseExp.evaluate(exp)+"";
 		
 	}
