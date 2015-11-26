@@ -1,41 +1,41 @@
 # ParseExp
 	A class used to parse a String into a mathematical expression.
 
-	ParseExp(String exp)
+	ParseExp(String exp) throws ParseException
 		Initializes a ParseExp object with the string exp.
 
-	double evaluate()
+	double evaluate() throws ParseException
 		Parses the string which the ParseExp object was initiallized 
 		with. If the string contains "=", calls equate.
 
-	double evaluate(String exp)
+	double evaluate(String exp) throws ParseException
 		Parses the string passed to the function. If the string contains "=", calls equate.
 
-	double equate()
+	double equate() throws ParseException
 		Parses the equation with which the ParseExp object was initialized with.
 		Return 1 if true and 0 if false.	
 
-	double equate(String exp)
+	double equate(String exp) throws ParseException
 		Parses the equation passed to the function.
 		Return 1 if true and 0 if false.
 			
-	double nextNum()
+	double nextNum() throws ParseException
 		Returns the next number in the expression. Throws ParseException
 		if no number is found. Use hasNextNum to avoid this.
 
-	boolean hasNextNum()
+	boolean hasNextNum() throws ParseException
 		Returns true if there is another number in the expression, false
 		otherwise.
 
-	double nextOp()
+	double nextOp() throws ParseException throws ParseException
 		Returns the next operation in the experssion. Throws ParseException
 		if no operation is found. Use hasNextOp to avoid this.	
 
-	boolean hasNextOp()
+	boolean hasNextOp() throws ParseException
 		Returns true if there is another operation in the expression, false
 		otherwise.
 
-	String getExp()
+	String getExp() throws ParseException
 		Returns the original expression as a String.	
 
 # ParseFn
@@ -47,4 +47,5 @@
 
 	String defVar(char[] var, double[] values) throws ParseException
 		Assigns the vars to specified values.
-		returns "" if some vars aren't assigned yet
+		returns "" if some vars aren't assigned yet.
+		Note that defVar does not edit the original function

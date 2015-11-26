@@ -66,6 +66,12 @@ class ParseFn
 
 	public String defVar(char[] var, double[] value) throws ParseException
 	{
+		for (variable : var)
+		{	
+			if (!vars.contains(variable+""))
+				throw new ParseException("Illegal varaible names!");			
+		}
+		
 		if (var.length!=value.length)
 			throw new ParseException("Unmatched vars and values!");
 		
