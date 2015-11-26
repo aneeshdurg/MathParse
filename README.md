@@ -48,6 +48,7 @@
 # ParseFn
 	A class used to parse a String into a mathematical function.
 	Character in the range a..z are acceptable variable names.
+	(Functional, but needs work)
 
 	ParseFn(String fn) throws ParseExption
 		Initializes a ParseFn object with the string fn
