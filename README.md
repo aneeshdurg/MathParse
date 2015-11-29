@@ -48,27 +48,25 @@
 # ParseFn
 	A class used to parse a String into a mathematical function.
 	Character in the range a..z are acceptable variable names.
-	(Functional, but needs work)
 
 	ParseFn(String fn) throws ParseExption
 		Initializes a ParseFn object with the string fn
 
-	String defVar(char var, String values) throws ParseException
-		Replaces var with a value. The value is a String and can be 
-		used to change one variable to another.
+	String defVar(char var, String value) throws ParseException
+		Replaces var with value.
 		See below for more details
 
 	String defVar(char[] var, String[] values) throws ParseException
 		Assigns the vars to specified values. The values are Strings and 
 		can be used to change one variable to another.
-		returns a String displaying var replaced with values
-		if some vars aren't assigned yet. Returns the value of the function 
-		otherwise.
-		If some vars are not yet assigned, the assigned variables will be saved
-		and calling defvars again will use the saved values. Use:
+		returns a String displaying var replaced with values if some vars aren't 
+		assigned yet. Otherwise returns the value of the function.
+		If some vars are not yet assigned, the assigned variables will be saved.
+		Calling defvars again will use the saved values.
+		To reset all variables use:
 			object.defVar();
-		to reset the defined variables.	
 		Note that defVar does not edit the original function
 
 	void defVar()
-		Resets saved variables.	
+		Resets saved variables.	If variables have not be assigned values via the 
+		above defVar methods, this has no effect.
