@@ -76,7 +76,19 @@ public class ParseFn
 		}
 	}
 
-	public String defVar(char[] var, double[] value) throws ParseException
+	public void defVar()
+	{
+		defterms = new LinkedList<String>();
+	}
+	public String defVar(char var, String value) throws ParseException
+	{
+		char[] vars = new char[1];
+		vars[0] = var;
+		String[] vals = new String[1];
+		vals[0] = value;
+		return defVar(vars, vals);
+	}
+	public String defVar(char[] var, String[] value) throws ParseException
 	{
 		//checks var for illegal chars
 		for (int i=0; i<var.length; i++)
@@ -95,7 +107,7 @@ public class ParseFn
 				String temp = terms.get(i);
 
 				for (int k=0; k<var.length; k++)
-					temp = temp.replace(var[k]+"", value[k]+"");
+					temp = temp.replace(var[k]+"", value[k]);
 
 				defterms.add(temp);
 			}
@@ -107,7 +119,7 @@ public class ParseFn
 				String temp = defterms.get(i);
 
 				for (int k=0; k<var.length; k++)
-					temp = temp.replace(var[k]+"", value[k]+"");
+					temp = temp.replace(var[k]+"", value[k]);
 
 				defterms.add(i, temp);
 				defterms.remove(i+1);

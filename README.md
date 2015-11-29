@@ -53,7 +53,22 @@
 	ParseFn(String fn) throws ParseExption
 		Initializes a ParseFn object with the string fn
 
-	String defVar(char[] var, double[] values) throws ParseException
-		Assigns the vars to specified values.
-		returns "" if some vars aren't assigned yet.
+	String defVar(char var, String values) throws ParseException
+		Replaces var with a value. The value is a String and can be 
+		used to change one variable to another.
+		See below for more details
+
+	String defVar(char[] var, String[] values) throws ParseException
+		Assigns the vars to specified values. The values are Strings and 
+		can be used to change one variable to another.
+		returns a String displaying var replaced with values
+		if some vars aren't assigned yet. Returns the value of the function 
+		otherwise.
+		If some vars are not yet assigned, the assigned variables will be saved
+		and calling defvars again will use the saved values. Use:
+			object.defVar();
+		to reset the defined variables.	
 		Note that defVar does not edit the original function
+
+	void defVar()
+		Resets saved variables.	
