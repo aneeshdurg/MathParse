@@ -1,4 +1,4 @@
-#MathParse
+# MathParse
 	To use, add the folder MathParse to your project directory and add the line:
 		> import MathParse.*;
 	to import all classes in MathParse
